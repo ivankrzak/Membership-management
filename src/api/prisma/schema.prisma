@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model Members {
+  id                  Int             @id @default(autoincrement())
+  barcode             Int
+  firstName           String
+  lastName            String
+  isStudent           Boolean         @default(false)
+  memberships         Subscriptions[]
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  hasActiveMembership Boolean         @default(false)
+  membershipValidTill DateTime
+  visits              Int             @default(0)
+  PersonalData        PersonalData?
+}
+
+model PersonalData {
+  id        Int        @id @default(autoincrement())
+  address   String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  country   String
+  gender    GenderType
+  member    Members    @relation(fields: [memberId], references: [id])
+  memberId  Int        @unique
+}
+
+model Subscriptions {
+  id        Int                    @id @default(autoincrement())
+  type      MemebershipType
+  entries   Int?
+  period    MemebershipTimePeriod?
+  validTill DateTime?
+  isBlocked Boolean                @default(false)
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+  owner     Members?               @relation(fields: [ownerId], references: [id])
+  ownerId   Int?
+
+}
+
+enum MemebershipType {
+  TIME
+  ENTRY
+}
+
+enum MemebershipTimePeriod {
+  THREE
+  SIX
+  TWELWE
+}
+
+enum GenderType {
+  WOMAN
+  MAN
+}

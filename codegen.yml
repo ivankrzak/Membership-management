@@ -1,0 +1,14 @@
+overwrite: true
+schema: 'src/api/typeDefs'
+generates:
+  src/api/generated/resolvers-types.ts:
+    config:
+      useIndexSignature: true
+      contextType: ../prisma/IPrismaContext#IPrismaContext
+      mapperTypeSuffix: Model
+      mappers:
+        Member: '@prisma/client#Member'
+      inputMaybeValue: undefined | T
+    plugins:
+      - typescript
+      - typescript-resolvers

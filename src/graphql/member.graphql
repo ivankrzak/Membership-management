@@ -1,0 +1,43 @@
+query Members {
+  members {
+    id
+    firstName
+    lastName
+    address
+    email
+    telNumber
+    isStudent
+    gender
+    country
+    createdAt
+    updatedAt
+  }
+}
+
+input CreateMemberInput {
+  firstName: String!
+  lastName: String!
+  address: String!
+  telNumber: String
+  email: String
+  isStudent: Boolean
+  country: String!
+  gender: GenderType!
+}
+
+fragment MemberInput on Member {
+  firstName
+  lastName
+  address
+  telNumber
+  email
+  isStudent
+  country
+  gender
+}
+
+mutation createMember($input: CreateMemberInput!) {
+  createMember(input: $input) {
+    ...MemberInput
+  }
+}

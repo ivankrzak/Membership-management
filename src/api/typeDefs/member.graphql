@@ -1,0 +1,38 @@
+enum GenderType {
+  MAN
+  WOMAN
+}
+
+type Member {
+  id: Int
+  firstName: String
+  lastName: String
+  address: String
+  country: String
+  email: String
+  telNumber: String
+  isStudent: Boolean
+  memberships: [Membership]
+  gender: GenderType
+  createdAt: Date
+  updatedAt: Date
+}
+
+input CreateMemberInput {
+  firstName: String!
+  lastName: String!
+  address: String!
+  telNumber: String
+  email: String
+  isStudent: Boolean
+  country: String!
+  gender: GenderType!
+}
+
+type Mutation {
+  createMember(input: CreateMemberInput!): Member
+}
+
+type Query {
+  members: [Member]!
+}

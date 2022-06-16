@@ -1,0 +1,24 @@
+enum MemebershipType {
+  TIME
+  ENTRY
+}
+
+enum MemebershipTimePeriod {
+  THREE
+  SIX
+  TWELWE
+}
+
+type Membership {
+  id: Int!
+  barcode: String!
+  type: MemebershipType!
+  entries: String
+  period: MemebershipTimePeriod
+  validTill: Date
+  isBlocked: Boolean
+  createdAt: Date
+  updatedAt: Date
+  ownerId: Int
+  owner: Member
+}

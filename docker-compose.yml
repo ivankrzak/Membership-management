@@ -1,0 +1,16 @@
+version: '3'
+services:
+  membership-management:
+    container_name: membership-management
+    platform: linux/amd64
+    image: mysql
+    restart: always
+    ports:
+      - '5435:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: prisma
+    volumes:
+      - membership-management-volume:/var/lib/mysql
+
+volumes:
+  membership-management-volume:
