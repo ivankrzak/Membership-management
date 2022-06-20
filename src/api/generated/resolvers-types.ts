@@ -97,8 +97,16 @@ export type PersonalData = {
 
 export type Query = {
   __typename?: 'Query';
+  checkActiveSubscriptions?: Maybe<Array<Maybe<Subscription>>>;
   member: Member;
   members: Array<Maybe<Member>>;
+  subscriptions: Array<Maybe<Subscription>>;
+  subscriptionsByMemberId?: Maybe<Array<Maybe<Subscription>>>;
+};
+
+
+export type QueryCheckActiveSubscriptionsArgs = {
+  memberId: Scalars['Int'];
 };
 
 
@@ -106,12 +114,17 @@ export type QueryMemberArgs = {
   barcode: Scalars['Int'];
 };
 
+
+export type QuerySubscriptionsByMemberIdArgs = {
+  memberId: Scalars['Int'];
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   createdAt: Scalars['Date'];
   entries?: Maybe<Scalars['Int']>;
   id: Scalars['Int'];
-  isBlocked?: Maybe<Scalars['Boolean']>;
+  isActive: Scalars['Boolean'];
   owner?: Maybe<Member>;
   ownerId?: Maybe<Scalars['Int']>;
   period?: Maybe<SubscriptionPeriod>;
@@ -292,15 +305,18 @@ export type PersonalDataResolvers<ContextType = IPrismaContext, ParentType exten
 }>;
 
 export type QueryResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  checkActiveSubscriptions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Subscription']>>>, ParentType, ContextType, RequireFields<QueryCheckActiveSubscriptionsArgs, 'memberId'>>;
   member?: Resolver<ResolversTypes['Member'], ParentType, ContextType, RequireFields<QueryMemberArgs, 'barcode'>>;
   members?: Resolver<Array<Maybe<ResolversTypes['Member']>>, ParentType, ContextType>;
+  subscriptions?: Resolver<Array<Maybe<ResolversTypes['Subscription']>>, ParentType, ContextType>;
+  subscriptionsByMemberId?: Resolver<Maybe<Array<Maybe<ResolversTypes['Subscription']>>>, ParentType, ContextType, RequireFields<QuerySubscriptionsByMemberIdArgs, 'memberId'>>;
 }>;
 
 export type SubscriptionResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
   createdAt?: SubscriptionResolver<ResolversTypes['Date'], "createdAt", ParentType, ContextType>;
   entries?: SubscriptionResolver<Maybe<ResolversTypes['Int']>, "entries", ParentType, ContextType>;
   id?: SubscriptionResolver<ResolversTypes['Int'], "id", ParentType, ContextType>;
-  isBlocked?: SubscriptionResolver<Maybe<ResolversTypes['Boolean']>, "isBlocked", ParentType, ContextType>;
+  isActive?: SubscriptionResolver<ResolversTypes['Boolean'], "isActive", ParentType, ContextType>;
   owner?: SubscriptionResolver<Maybe<ResolversTypes['Member']>, "owner", ParentType, ContextType>;
   ownerId?: SubscriptionResolver<Maybe<ResolversTypes['Int']>, "ownerId", ParentType, ContextType>;
   period?: SubscriptionResolver<Maybe<ResolversTypes['SubscriptionPeriod']>, "period", ParentType, ContextType>;
