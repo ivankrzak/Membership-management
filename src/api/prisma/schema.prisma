@@ -14,7 +14,7 @@ datasource db {
 
 model Members {
   id                  Int             @id @default(autoincrement())
-  barcode             Int
+  barcode             Int             @unique
   firstName           String
   lastName            String
   isStudent           Boolean         @default(false)
