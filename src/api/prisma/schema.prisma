@@ -18,49 +18,51 @@ model Members {
   firstName           String
   lastName            String
   isStudent           Boolean         @default(false)
-  memberships         Subscriptions[]
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @updatedAt
   hasActiveMembership Boolean         @default(false)
   membershipValidTill DateTime
   visits              Int             @default(0)
-  PersonalData        PersonalData?
+  isBlocked           Boolean         @default(false)
+  subscriptions       Subscriptions[]
+  personalData        PersonalData?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
 }
 
 model PersonalData {
   id        Int        @id @default(autoincrement())
   address   String
+  country   String
+  email     String?
+  telNumber String?
+  gender    GenderType
+  ownerId   Int        @unique
+  member    Members    @relation(fields: [ownerId], references: [id])
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  country   String
-  gender    GenderType
-  member    Members    @relation(fields: [memberId], references: [id])
-  memberId  Int        @unique
 }
 
 model Subscriptions {
-  id        Int                    @id @default(autoincrement())
-  type      MemebershipType
+  id        Int                 @id @default(autoincrement())
+  type      SubscriptionType
   entries   Int?
-  period    MemebershipTimePeriod?
+  period    SubscriptionPeriod?
   validTill DateTime?
-  isBlocked Boolean                @default(false)
-  createdAt DateTime               @default(now())
-  updatedAt DateTime               @updatedAt
-  owner     Members?               @relation(fields: [ownerId], references: [id])
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  owner     Members?            @relation(fields: [ownerId], references: [id])
   ownerId   Int?
 
 }
 
-enum MemebershipType {
+enum SubscriptionType {
   TIME
   ENTRY
 }
 
-enum MemebershipTimePeriod {
+enum SubscriptionPeriod {
   THREE
   SIX
-  TWELWE
+  TWELVE
 }
 
 enum GenderType {
