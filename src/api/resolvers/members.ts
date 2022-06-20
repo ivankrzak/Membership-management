@@ -18,6 +18,20 @@ const Member: QueryResolvers = {
           personalData: true,
         },
       }),
+    member: async (
+      _parent: unknown,
+      args: { barcode: number },
+      context: IPrismaContext
+    ) =>
+      context.prisma.members.findFirst({
+        where: {
+          barcode: args.barcode,
+        },
+        include: {
+          subscriptions: true,
+          personalData: true,
+        },
+      }),
   },
   Mutation: {
     createMember: (

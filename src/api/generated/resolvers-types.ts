@@ -97,7 +97,13 @@ export type PersonalData = {
 
 export type Query = {
   __typename?: 'Query';
+  member: Member;
   members: Array<Maybe<Member>>;
+};
+
+
+export type QueryMemberArgs = {
+  barcode: Scalars['Int'];
 };
 
 export type Subscription = {
@@ -286,6 +292,7 @@ export type PersonalDataResolvers<ContextType = IPrismaContext, ParentType exten
 }>;
 
 export type QueryResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  member?: Resolver<ResolversTypes['Member'], ParentType, ContextType, RequireFields<QueryMemberArgs, 'barcode'>>;
   members?: Resolver<Array<Maybe<ResolversTypes['Member']>>, ParentType, ContextType>;
 }>;
 
