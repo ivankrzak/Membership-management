@@ -62,11 +62,17 @@ export type Member = {
 export type Mutation = {
   __typename?: 'Mutation';
   createMember?: Maybe<Member>;
+  deteteMember?: Maybe<Scalars['Boolean']>;
 };
 
 
 export type MutationCreateMemberArgs = {
   input: CreateMemberInput;
+};
+
+
+export type MutationDeteteMemberArgs = {
+  memberId: Scalars['Int'];
 };
 
 export type PersonalData = {
@@ -239,6 +245,7 @@ export type MemberResolvers<ContextType = IPrismaContext, ParentType extends Res
 
 export type MutationResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   createMember?: Resolver<Maybe<ResolversTypes['Member']>, ParentType, ContextType, RequireFields<MutationCreateMemberArgs, 'input'>>;
+  deteteMember?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeteteMemberArgs, 'memberId'>>;
 }>;
 
 export type PersonalDataResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['PersonalData'] = ResolversParentTypes['PersonalData']> = ResolversObject<{

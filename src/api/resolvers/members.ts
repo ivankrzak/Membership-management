@@ -61,6 +61,36 @@ const Member: QueryResolvers = {
         },
       })
     },
+    deleteMember: async (
+      _parent: unknown,
+      args: { memberId: number },
+      context: IPrismaContext
+    ) => {
+      const deleteRelatedSubscriptions =
+        context.prisma.subscriptions.deleteMany({
+          where: {
+            ownerId: args.memberId,
+          },
+        })
+      const deletePersonalData = context.prisma.personalData.delete({
+        where: {
+          ownerId: args.memberId,
+        },
+      })
+      const deleteMember = context.prisma.members.delete({
+        where: {
+          id: args.memberId,
+        },
+      })
+
+      await context.prisma.$transaction([
+        deleteMember,
+        deletePersonalData,
+        deleteRelatedSubscriptions,
+      ])
+
+      return true
+    },
   },
 }
 

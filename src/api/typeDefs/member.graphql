@@ -36,6 +36,7 @@ input CreateMemberInput {
 
 type Mutation {
   createMember(input: CreateMemberInput!): Member
+  deleteMember(memberId: Int!): Boolean
 }
 
 type Query {
