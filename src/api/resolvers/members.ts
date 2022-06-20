@@ -1,4 +1,8 @@
-import { CreateMemberInput, QueryResolvers } from '../generated/resolvers-types'
+import {
+  CreateMemberInput,
+  QueryResolvers,
+  UpdateMemberInput,
+} from '../generated/resolvers-types'
 import { IPrismaContext } from '../prisma/IPrismaContext'
 
 const Member: QueryResolvers = {
@@ -51,6 +55,48 @@ const Member: QueryResolvers = {
             : {},
           personalData: {
             create: {
+              address,
+              country,
+              telNumber,
+              email,
+              gender,
+            },
+          },
+        },
+      })
+    },
+    updateMember: (
+      _parent: unknown,
+      args: { data: UpdateMemberInput; memberId: number },
+      context: IPrismaContext
+    ) => {
+      const {
+        barcode,
+        firstName,
+        lastName,
+        gender,
+        address,
+        email,
+        telNumber,
+        isStudent,
+        country,
+        hasActiveMembership,
+        membershipValidTill,
+      } = args.data
+      return context.prisma.members.update({
+        where: {
+          id: args.memberId,
+        },
+        data: {
+          barcode,
+          firstName,
+          lastName,
+          isStudent,
+          // Add dynamic DATE calculation
+          hasActiveMembership,
+          membershipValidTill,
+          personalData: {
+            update: {
               address,
               country,
               telNumber,

@@ -34,8 +34,24 @@ input CreateMemberInput {
   period: SubscriptionPeriod
 }
 
+input UpdateMemberInput {
+  barcode: Int
+  firstName: String
+  lastName: String
+  address: String
+  telNumber: String
+  email: String
+  isStudent: Boolean
+  country: String
+  gender: GenderType
+  hasActiveMembership: Boolean
+  membershipValidTill: Date
+}
+
 type Mutation {
   createMember(input: CreateMemberInput!): Member
+  updateMember(data: UpdateMemberInput!, memberId: Int!): Member
+
   deleteMember(memberId: Int!): Boolean
 }
 
