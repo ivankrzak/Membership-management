@@ -6,7 +6,6 @@ export type InputMaybe<T> = undefined | T;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -20,13 +19,17 @@ export type Scalars = {
 
 export type CreateMemberInput = {
   address: Scalars['String'];
+  barcode: Scalars['Int'];
   country: Scalars['String'];
   email?: InputMaybe<Scalars['String']>;
+  entries?: InputMaybe<Scalars['Int']>;
   firstName: Scalars['String'];
   gender: GenderType;
   isStudent?: InputMaybe<Scalars['Boolean']>;
   lastName: Scalars['String'];
+  period?: InputMaybe<SubscriptionPeriod>;
   telNumber?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<SubscriptionType>;
 };
 
 export enum GenderType {
@@ -37,44 +40,24 @@ export enum GenderType {
 export type Member = {
   __typename?: 'Member';
   address?: Maybe<Scalars['String']>;
+  barcode?: Maybe<Scalars['Int']>;
   country?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['Date']>;
   email?: Maybe<Scalars['String']>;
   firstName?: Maybe<Scalars['String']>;
   gender?: Maybe<GenderType>;
+  hasActiveMembership?: Maybe<Scalars['Boolean']>;
   id?: Maybe<Scalars['Int']>;
+  isBlocked?: Maybe<Scalars['Boolean']>;
   isStudent?: Maybe<Scalars['Boolean']>;
   lastName?: Maybe<Scalars['String']>;
-  memberships?: Maybe<Array<Maybe<Membership>>>;
+  membershipValidTill?: Maybe<Scalars['Date']>;
+  personalData?: Maybe<PersonalData>;
+  subscriptions?: Maybe<Array<Maybe<Subscription>>>;
   telNumber?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['Date']>;
+  visits?: Maybe<Scalars['Int']>;
 };
-
-export type Membership = {
-  __typename?: 'Membership';
-  barcode: Scalars['String'];
-  createdAt?: Maybe<Scalars['Date']>;
-  entries?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-  isBlocked?: Maybe<Scalars['Boolean']>;
-  owner?: Maybe<Member>;
-  ownerId?: Maybe<Scalars['Int']>;
-  period?: Maybe<MemebershipTimePeriod>;
-  type: MemebershipType;
-  updatedAt?: Maybe<Scalars['Date']>;
-  validTill?: Maybe<Scalars['Date']>;
-};
-
-export enum MemebershipTimePeriod {
-  Six = 'SIX',
-  Three = 'THREE',
-  Twelwe = 'TWELWE'
-}
-
-export enum MemebershipType {
-  Entry = 'ENTRY',
-  Time = 'TIME'
-}
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -86,10 +69,48 @@ export type MutationCreateMemberArgs = {
   input: CreateMemberInput;
 };
 
+export type PersonalData = {
+  __typename?: 'PersonalData';
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Date']>;
+  email?: Maybe<Scalars['String']>;
+  gender?: Maybe<GenderType>;
+  id?: Maybe<Scalars['Int']>;
+  ownerId?: Maybe<Scalars['Int']>;
+  telNumber?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['Date']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   members: Array<Maybe<Member>>;
 };
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  createdAt: Scalars['Date'];
+  entries?: Maybe<Scalars['Int']>;
+  id: Scalars['Int'];
+  isBlocked?: Maybe<Scalars['Boolean']>;
+  owner?: Maybe<Member>;
+  ownerId?: Maybe<Scalars['Int']>;
+  period?: Maybe<SubscriptionPeriod>;
+  type: SubscriptionType;
+  updatedAt: Scalars['Date'];
+  validTill?: Maybe<Scalars['Date']>;
+};
+
+export enum SubscriptionPeriod {
+  Six = 'SIX',
+  Three = 'THREE',
+  Twelve = 'TWELVE'
+}
+
+export enum SubscriptionType {
+  Entry = 'ENTRY',
+  Time = 'TIME'
+}
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
@@ -167,12 +188,13 @@ export type ResolversTypes = ResolversObject<{
   GenderType: GenderType;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Member: ResolverTypeWrapper<MemberModel>;
-  Membership: ResolverTypeWrapper<Omit<Membership, 'owner'> & { owner?: Maybe<ResolversTypes['Member']> }>;
-  MemebershipTimePeriod: MemebershipTimePeriod;
-  MemebershipType: MemebershipType;
   Mutation: ResolverTypeWrapper<{}>;
+  PersonalData: ResolverTypeWrapper<PersonalData>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  Subscription: ResolverTypeWrapper<{}>;
+  SubscriptionPeriod: SubscriptionPeriod;
+  SubscriptionType: SubscriptionType;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -182,10 +204,11 @@ export type ResolversParentTypes = ResolversObject<{
   Date: Scalars['Date'];
   Int: Scalars['Int'];
   Member: MemberModel;
-  Membership: Omit<Membership, 'owner'> & { owner?: Maybe<ResolversParentTypes['Member']> };
   Mutation: {};
+  PersonalData: PersonalData;
   Query: {};
   String: Scalars['String'];
+  Subscription: {};
 }>;
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
@@ -194,32 +217,23 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 
 export type MemberResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Member'] = ResolversParentTypes['Member']> = ResolversObject<{
   address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  barcode?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   gender?: Resolver<Maybe<ResolversTypes['GenderType']>, ParentType, ContextType>;
+  hasActiveMembership?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  isBlocked?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   isStudent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  memberships?: Resolver<Maybe<Array<Maybe<ResolversTypes['Membership']>>>, ParentType, ContextType>;
+  membershipValidTill?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  personalData?: Resolver<Maybe<ResolversTypes['PersonalData']>, ParentType, ContextType>;
+  subscriptions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Subscription']>>>, ParentType, ContextType>;
   telNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type MembershipResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Membership'] = ResolversParentTypes['Membership']> = ResolversObject<{
-  barcode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
-  entries?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  isBlocked?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  owner?: Resolver<Maybe<ResolversTypes['Member']>, ParentType, ContextType>;
-  ownerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  period?: Resolver<Maybe<ResolversTypes['MemebershipTimePeriod']>, ParentType, ContextType>;
-  type?: Resolver<ResolversTypes['MemebershipType'], ParentType, ContextType>;
-  updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
-  validTill?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  visits?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -227,15 +241,42 @@ export type MutationResolvers<ContextType = IPrismaContext, ParentType extends R
   createMember?: Resolver<Maybe<ResolversTypes['Member']>, ParentType, ContextType, RequireFields<MutationCreateMemberArgs, 'input'>>;
 }>;
 
+export type PersonalDataResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['PersonalData'] = ResolversParentTypes['PersonalData']> = ResolversObject<{
+  address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  gender?: Resolver<Maybe<ResolversTypes['GenderType']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  ownerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  telNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   members?: Resolver<Array<Maybe<ResolversTypes['Member']>>, ParentType, ContextType>;
+}>;
+
+export type SubscriptionResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
+  createdAt?: SubscriptionResolver<ResolversTypes['Date'], "createdAt", ParentType, ContextType>;
+  entries?: SubscriptionResolver<Maybe<ResolversTypes['Int']>, "entries", ParentType, ContextType>;
+  id?: SubscriptionResolver<ResolversTypes['Int'], "id", ParentType, ContextType>;
+  isBlocked?: SubscriptionResolver<Maybe<ResolversTypes['Boolean']>, "isBlocked", ParentType, ContextType>;
+  owner?: SubscriptionResolver<Maybe<ResolversTypes['Member']>, "owner", ParentType, ContextType>;
+  ownerId?: SubscriptionResolver<Maybe<ResolversTypes['Int']>, "ownerId", ParentType, ContextType>;
+  period?: SubscriptionResolver<Maybe<ResolversTypes['SubscriptionPeriod']>, "period", ParentType, ContextType>;
+  type?: SubscriptionResolver<ResolversTypes['SubscriptionType'], "type", ParentType, ContextType>;
+  updatedAt?: SubscriptionResolver<ResolversTypes['Date'], "updatedAt", ParentType, ContextType>;
+  validTill?: SubscriptionResolver<Maybe<ResolversTypes['Date']>, "validTill", ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = IPrismaContext> = ResolversObject<{
   Date?: GraphQLScalarType;
   Member?: MemberResolvers<ContextType>;
-  Membership?: MembershipResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  PersonalData?: PersonalDataResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Subscription?: SubscriptionResolvers<ContextType>;
 }>;
 

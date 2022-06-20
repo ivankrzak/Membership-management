@@ -1,0 +1,23 @@
+enum SubscriptionType {
+  TIME
+  ENTRY
+}
+
+enum SubscriptionPeriod {
+  THREE
+  SIX
+  TWELVE
+}
+
+type Subscription {
+  id: Int!
+  type: SubscriptionType!
+  entries: Int
+  period: SubscriptionPeriod
+  validTill: Date
+  isBlocked: Boolean
+  createdAt: Date!
+  updatedAt: Date!
+  ownerId: Int
+  owner: Member
+}

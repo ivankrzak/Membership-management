@@ -1,24 +1,26 @@
-enum GenderType {
-  MAN
-  WOMAN
-}
-
 type Member {
   id: Int
+  barcode: Int
   firstName: String
   lastName: String
+  isStudent: Boolean
+  hasActiveMembership: Boolean
+  membershipValidTill: Date
+  visits: Int
+  createdAt: Date
+  updatedAt: Date
+  isBlocked: Boolean
+  subscriptions: [Subscription]
+  personalData: PersonalData
   address: String
   country: String
   email: String
   telNumber: String
-  isStudent: Boolean
-  memberships: [Membership]
   gender: GenderType
-  createdAt: Date
-  updatedAt: Date
 }
 
 input CreateMemberInput {
+  barcode: Int!
   firstName: String!
   lastName: String!
   address: String!
@@ -27,6 +29,9 @@ input CreateMemberInput {
   isStudent: Boolean
   country: String!
   gender: GenderType!
+  type: SubscriptionType
+  entries: Int
+  period: SubscriptionPeriod
 }
 
 type Mutation {

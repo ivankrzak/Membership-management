@@ -18,13 +18,17 @@ export type Scalars = {
 
 export type CreateMemberInput = {
   address: Scalars['String'];
+  barcode: Scalars['Int'];
   country: Scalars['String'];
   email?: InputMaybe<Scalars['String']>;
+  entries?: InputMaybe<Scalars['Int']>;
   firstName: Scalars['String'];
   gender: GenderType;
   isStudent?: InputMaybe<Scalars['Boolean']>;
   lastName: Scalars['String'];
+  period?: InputMaybe<SubscriptionPeriod>;
   telNumber?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<SubscriptionType>;
 };
 
 export enum GenderType {
@@ -35,44 +39,24 @@ export enum GenderType {
 export type Member = {
   __typename?: 'Member';
   address?: Maybe<Scalars['String']>;
+  barcode?: Maybe<Scalars['Int']>;
   country?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['Date']>;
   email?: Maybe<Scalars['String']>;
   firstName?: Maybe<Scalars['String']>;
   gender?: Maybe<GenderType>;
+  hasActiveMembership?: Maybe<Scalars['Boolean']>;
   id?: Maybe<Scalars['Int']>;
+  isBlocked?: Maybe<Scalars['Boolean']>;
   isStudent?: Maybe<Scalars['Boolean']>;
   lastName?: Maybe<Scalars['String']>;
-  memberships?: Maybe<Array<Maybe<Membership>>>;
+  membershipValidTill?: Maybe<Scalars['Date']>;
+  personalData?: Maybe<PersonalData>;
+  subscriptions?: Maybe<Array<Maybe<Subscription>>>;
   telNumber?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['Date']>;
+  visits?: Maybe<Scalars['Int']>;
 };
-
-export type Membership = {
-  __typename?: 'Membership';
-  barcode: Scalars['String'];
-  createdAt?: Maybe<Scalars['Date']>;
-  entries?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-  isBlocked?: Maybe<Scalars['Boolean']>;
-  owner?: Maybe<Member>;
-  ownerId?: Maybe<Scalars['Int']>;
-  period?: Maybe<MemebershipTimePeriod>;
-  type: MemebershipType;
-  updatedAt?: Maybe<Scalars['Date']>;
-  validTill?: Maybe<Scalars['Date']>;
-};
-
-export enum MemebershipTimePeriod {
-  Six = 'SIX',
-  Three = 'THREE',
-  Twelwe = 'TWELWE'
-}
-
-export enum MemebershipType {
-  Entry = 'ENTRY',
-  Time = 'TIME'
-}
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -84,17 +68,55 @@ export type MutationCreateMemberArgs = {
   input: CreateMemberInput;
 };
 
+export type PersonalData = {
+  __typename?: 'PersonalData';
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Date']>;
+  email?: Maybe<Scalars['String']>;
+  gender?: Maybe<GenderType>;
+  id?: Maybe<Scalars['Int']>;
+  ownerId?: Maybe<Scalars['Int']>;
+  telNumber?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['Date']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   members: Array<Maybe<Member>>;
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  createdAt: Scalars['Date'];
+  entries?: Maybe<Scalars['Int']>;
+  id: Scalars['Int'];
+  isBlocked?: Maybe<Scalars['Boolean']>;
+  owner?: Maybe<Member>;
+  ownerId?: Maybe<Scalars['Int']>;
+  period?: Maybe<SubscriptionPeriod>;
+  type: SubscriptionType;
+  updatedAt: Scalars['Date'];
+  validTill?: Maybe<Scalars['Date']>;
+};
+
+export enum SubscriptionPeriod {
+  Six = 'SIX',
+  Three = 'THREE',
+  Twelve = 'TWELVE'
+}
+
+export enum SubscriptionType {
+  Entry = 'ENTRY',
+  Time = 'TIME'
+}
+
 export type MembersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MembersQuery = { __typename?: 'Query', members: Array<{ __typename?: 'Member', id?: number | null, firstName?: string | null, lastName?: string | null, address?: string | null, email?: string | null, telNumber?: string | null, isStudent?: boolean | null, gender?: GenderType | null, country?: string | null, createdAt?: string | null, updatedAt?: string | null } | null> };
+export type MembersQuery = { __typename?: 'Query', members: Array<{ __typename?: 'Member', id?: number | null, barcode?: number | null, firstName?: string | null, lastName?: string | null, isStudent?: boolean | null, visits?: number | null, hasActiveMembership?: boolean | null, membershipValidTill?: string | null, createdAt?: string | null, updatedAt?: string | null } | null> };
 
-export type MemberInputFragment = { __typename?: 'Member', firstName?: string | null, lastName?: string | null, address?: string | null, telNumber?: string | null, email?: string | null, isStudent?: boolean | null, country?: string | null, gender?: GenderType | null };
+export type CreateMemberReturnValueFragment = { __typename?: 'Member', firstName?: string | null, lastName?: string | null, address?: string | null, telNumber?: string | null, email?: string | null, isStudent?: boolean | null, country?: string | null, gender?: GenderType | null };
 
 export type CreateMemberMutationVariables = Exact<{
   input: CreateMemberInput;
@@ -103,8 +125,8 @@ export type CreateMemberMutationVariables = Exact<{
 
 export type CreateMemberMutation = { __typename?: 'Mutation', createMember?: { __typename?: 'Member', firstName?: string | null, lastName?: string | null, address?: string | null, telNumber?: string | null, email?: string | null, isStudent?: boolean | null, country?: string | null, gender?: GenderType | null } | null };
 
-export const MemberInputFragmentDoc = gql`
-    fragment MemberInput on Member {
+export const CreateMemberReturnValueFragmentDoc = gql`
+    fragment CreateMemberReturnValue on Member {
   firstName
   lastName
   address
@@ -119,14 +141,13 @@ export const MembersDocument = gql`
     query Members {
   members {
     id
+    barcode
     firstName
     lastName
-    address
-    email
-    telNumber
     isStudent
-    gender
-    country
+    visits
+    hasActiveMembership
+    membershipValidTill
     createdAt
     updatedAt
   }
@@ -162,10 +183,10 @@ export type MembersQueryResult = Apollo.QueryResult<MembersQuery, MembersQueryVa
 export const CreateMemberDocument = gql`
     mutation createMember($input: CreateMemberInput!) {
   createMember(input: $input) {
-    ...MemberInput
+    ...CreateMemberReturnValue
   }
 }
-    ${MemberInputFragmentDoc}`;
+    ${CreateMemberReturnValueFragmentDoc}`;
 export type CreateMemberMutationFn = Apollo.MutationFunction<CreateMemberMutation, CreateMemberMutationVariables>;
 
 /**

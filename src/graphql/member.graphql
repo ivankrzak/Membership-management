@@ -1,31 +1,34 @@
 query Members {
   members {
     id
+    barcode
     firstName
     lastName
-    address
-    email
-    telNumber
     isStudent
-    gender
-    country
+    visits
+    hasActiveMembership
+    membershipValidTill
     createdAt
     updatedAt
   }
 }
 
 input CreateMemberInput {
+  barcode: Int!
   firstName: String!
   lastName: String!
-  address: String!
-  telNumber: String
-  email: String
   isStudent: Boolean
+  gender: GenderType
+  address: String!
   country: String!
-  gender: GenderType!
+  email: String
+  telNumber: String
+  type: SubscriptionType
+  period: SubscriptionPeriod
+  entries: Int
 }
 
-fragment MemberInput on Member {
+fragment CreateMemberReturnValue on Member {
   firstName
   lastName
   address
@@ -38,6 +41,6 @@ fragment MemberInput on Member {
 
 mutation createMember($input: CreateMemberInput!) {
   createMember(input: $input) {
-    ...MemberInput
+    ...CreateMemberReturnValue
   }
 }

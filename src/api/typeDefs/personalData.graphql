@@ -1,0 +1,16 @@
+enum GenderType {
+  MAN
+  WOMAN
+}
+
+type PersonalData {
+  id: Int
+  address: String
+  country: String
+  email: String
+  telNumber: String
+  gender: GenderType
+  createdAt: Date
+  updatedAt: Date
+  ownerId: Int
+}

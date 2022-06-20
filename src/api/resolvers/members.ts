@@ -8,9 +8,10 @@ const Member: QueryResolvers = {
       _args: unknown,
       context: IPrismaContext
     ) =>
-      context.prisma.member.findMany({
+      context.prisma.members.findMany({
         include: {
-          memberships: true,
+          subscriptions: true,
+          personalData: true,
         },
       }),
   },
@@ -21,6 +22,7 @@ const Member: QueryResolvers = {
       context: IPrismaContext
     ) => {
       const {
+        barcode,
         firstName,
         lastName,
         gender,
@@ -29,18 +31,33 @@ const Member: QueryResolvers = {
         telNumber,
         isStudent,
         country,
+
+        type,
+        entries,
+        period,
       } = args.input
-      return context.prisma.member.create({
+      const canCreateSubscription = type && (entries || period)
+      return context.prisma.members.create({
         data: {
+          barcode,
           firstName,
           lastName,
-          address,
-          email,
-          telNumber,
           isStudent,
-          gender,
-          memberships: {},
-          country,
+          // Add dynamic DATE calculation
+          hasActiveMembership: true,
+          membershipValidTill: new Date(),
+          subscriptions: canCreateSubscription
+            ? { create: { type, entries, period, validTill: new Date() } }
+            : {},
+          personalData: {
+            create: {
+              address,
+              country,
+              telNumber,
+              email,
+              gender,
+            },
+          },
         },
       })
     },
