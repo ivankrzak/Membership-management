@@ -151,6 +151,21 @@ const Member: QueryResolvers = {
 
       return true
     },
+    blockMember: async (
+      _parent: unknown,
+      args: { isBlocked: boolean; memberId: number },
+      context: IPrismaContext
+    ) => {
+      await context.prisma.members.update({
+        where: {
+          id: args.memberId,
+        },
+        data: {
+          isBlocked: args.isBlocked,
+        },
+      })
+      return true
+    },
   },
 }
 

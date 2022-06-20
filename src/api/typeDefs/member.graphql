@@ -51,8 +51,8 @@ input UpdateMemberInput {
 type Mutation {
   createMember(input: CreateMemberInput!): Member
   updateMember(data: UpdateMemberInput!, memberId: Int!): Member
-
   deleteMember(memberId: Int!): Boolean
+  blockMember(isBlocked: Boolean!, memberId: Int!): Boolean
 }
 
 type Query {
