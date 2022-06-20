@@ -26,6 +26,7 @@ const Subscription: QueryResolvers = {
           owner: true,
         },
       }),
+    //   TODO Maybe move it to member resolver and get it via barcode at once
     checkActiveSubscriptions: async (
       _parent: unknown,
       args: { memberId: number },
