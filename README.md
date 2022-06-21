@@ -10,6 +10,12 @@ Run `yarn workspaces list` to see all project workspaces.
 
 ### Tech Stack
 
+`Prisma`
+`Apollo Client`
+`GraphQL`
+`GraphQL Codegen`
+`Chakra UI`
+
 ### Setup
 
 Run `yarn` from root directory to install packages.
