@@ -1,4 +1,8 @@
 import {
+  getDateFromSubscriptionPeriod,
+  getDateYearFromNow,
+} from 'api/utils/date'
+import {
   CreateMemberInput,
   QueryResolvers,
   UpdateMemberInput,
@@ -54,6 +58,7 @@ const Member: QueryResolvers = {
         entries,
         period,
       } = args.input
+
       const canCreateSubscription = type && (entries || period)
       return context.prisma.members.create({
         data: {
@@ -61,11 +66,17 @@ const Member: QueryResolvers = {
           firstName,
           lastName,
           isStudent,
-          // Add dynamic DATE calculation
           hasActiveMembership: true,
-          membershipValidTill: new Date(),
+          membershipValidTill: getDateYearFromNow(),
           subscriptions: canCreateSubscription
-            ? { create: { type, entries, period, validTill: new Date() } }
+            ? {
+                create: {
+                  type,
+                  entries,
+                  period,
+                  validTill: period && getDateFromSubscriptionPeriod(period),
+                },
+              }
             : {},
           personalData: {
             create: {
@@ -121,6 +132,7 @@ const Member: QueryResolvers = {
         },
       })
     },
+    // TODO prolong membership mutation
     deleteMember: async (
       _parent: unknown,
       args: { memberId: number },
