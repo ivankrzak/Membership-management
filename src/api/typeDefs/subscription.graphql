@@ -22,6 +22,12 @@ type Subscription {
   owner: Member
 }
 
+input CreateSubscriptionDataInput {
+  type: SubscriptionType!
+  entries: Int
+  period: SubscriptionPeriod
+}
+
 type Query {
   subscriptions: [Subscription]!
   subscriptionsByMemberId(memberId: Int!): [Subscription]

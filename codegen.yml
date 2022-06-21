@@ -7,7 +7,7 @@ generates:
       contextType: ../prisma/IPrismaContext#IPrismaContext
       mapperTypeSuffix: Model
       mappers:
-        Member: '@prisma/client#Member'
+        Member: '@prisma/client#Members'
       inputMaybeValue: undefined | T
     plugins:
       - typescript

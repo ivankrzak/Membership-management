@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { Member as MemberModel } from '@prisma/client';
+import { Members as MembersModel } from '@prisma/client';
 import { IPrismaContext } from '../prisma/IPrismaContext';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = undefined | T;
@@ -17,19 +17,31 @@ export type Scalars = {
   Date: any;
 };
 
-export type CreateMemberInput = {
-  address: Scalars['String'];
+export type CreateMemberDataInput = {
   barcode: Scalars['Int'];
+  firstName: Scalars['String'];
+  isStudent: Scalars['Boolean'];
+  lastName: Scalars['String'];
+};
+
+export type CreateMemberInput = {
+  memberData: CreateMemberDataInput;
+  personalData: CreatePersonalDataInput;
+  subscriptionData: CreateSubscriptionDataInput;
+};
+
+export type CreatePersonalDataInput = {
+  address: Scalars['String'];
   country: Scalars['String'];
   email?: InputMaybe<Scalars['String']>;
-  entries?: InputMaybe<Scalars['Int']>;
-  firstName: Scalars['String'];
   gender: GenderType;
-  isStudent?: InputMaybe<Scalars['Boolean']>;
-  lastName: Scalars['String'];
-  period?: InputMaybe<SubscriptionPeriod>;
   telNumber?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<SubscriptionType>;
+};
+
+export type CreateSubscriptionDataInput = {
+  entries?: InputMaybe<Scalars['Int']>;
+  period?: InputMaybe<SubscriptionPeriod>;
+  type: SubscriptionType;
 };
 
 export enum GenderType {
@@ -61,9 +73,16 @@ export type Member = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  blockMember?: Maybe<Scalars['Boolean']>;
   createMember?: Maybe<Member>;
   deleteMember?: Maybe<Scalars['Boolean']>;
   updateMember?: Maybe<Member>;
+};
+
+
+export type MutationBlockMemberArgs = {
+  isBlocked: Scalars['Boolean'];
+  memberId: Scalars['Int'];
 };
 
 
@@ -145,17 +164,8 @@ export enum SubscriptionType {
 }
 
 export type UpdateMemberInput = {
-  address?: InputMaybe<Scalars['String']>;
-  barcode?: InputMaybe<Scalars['Int']>;
-  country?: InputMaybe<Scalars['String']>;
-  email?: InputMaybe<Scalars['String']>;
-  firstName?: InputMaybe<Scalars['String']>;
-  gender?: InputMaybe<GenderType>;
-  hasActiveMembership?: InputMaybe<Scalars['Boolean']>;
-  isStudent?: InputMaybe<Scalars['Boolean']>;
-  lastName?: InputMaybe<Scalars['String']>;
-  membershipValidTill?: InputMaybe<Scalars['Date']>;
-  telNumber?: InputMaybe<Scalars['String']>;
+  memberData: CreateMemberDataInput;
+  personalData: CreatePersonalDataInput;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -229,11 +239,14 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  CreateMemberDataInput: CreateMemberDataInput;
   CreateMemberInput: CreateMemberInput;
+  CreatePersonalDataInput: CreatePersonalDataInput;
+  CreateSubscriptionDataInput: CreateSubscriptionDataInput;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   GenderType: GenderType;
   Int: ResolverTypeWrapper<Scalars['Int']>;
-  Member: ResolverTypeWrapper<MemberModel>;
+  Member: ResolverTypeWrapper<MembersModel>;
   Mutation: ResolverTypeWrapper<{}>;
   PersonalData: ResolverTypeWrapper<PersonalData>;
   Query: ResolverTypeWrapper<{}>;
@@ -247,10 +260,13 @@ export type ResolversTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
+  CreateMemberDataInput: CreateMemberDataInput;
   CreateMemberInput: CreateMemberInput;
+  CreatePersonalDataInput: CreatePersonalDataInput;
+  CreateSubscriptionDataInput: CreateSubscriptionDataInput;
   Date: Scalars['Date'];
   Int: Scalars['Int'];
-  Member: MemberModel;
+  Member: MembersModel;
   Mutation: {};
   PersonalData: PersonalData;
   Query: {};
@@ -286,6 +302,7 @@ export type MemberResolvers<ContextType = IPrismaContext, ParentType extends Res
 }>;
 
 export type MutationResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  blockMember?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationBlockMemberArgs, 'isBlocked' | 'memberId'>>;
   createMember?: Resolver<Maybe<ResolversTypes['Member']>, ParentType, ContextType, RequireFields<MutationCreateMemberArgs, 'input'>>;
   deleteMember?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteMemberArgs, 'memberId'>>;
   updateMember?: Resolver<Maybe<ResolversTypes['Member']>, ParentType, ContextType, RequireFields<MutationUpdateMemberArgs, 'data' | 'memberId'>>;

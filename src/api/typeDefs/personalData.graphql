@@ -14,3 +14,11 @@ type PersonalData {
   updatedAt: Date
   ownerId: Int
 }
+
+input CreatePersonalDataInput {
+  address: String!
+  telNumber: String
+  email: String
+  country: String!
+  gender: GenderType!
+}

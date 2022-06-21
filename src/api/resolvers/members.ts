@@ -43,48 +43,26 @@ const Member: QueryResolvers = {
       args: { input: CreateMemberInput },
       context: IPrismaContext
     ) => {
-      const {
-        barcode,
-        firstName,
-        lastName,
-        gender,
-        address,
-        email,
-        telNumber,
-        isStudent,
-        country,
-
-        type,
-        entries,
-        period,
-      } = args.input
+      const { memberData, personalData, subscriptionData } = args.input
+      const { type, entries, period } = subscriptionData
 
       const canCreateSubscription = type && (entries || period)
       return context.prisma.members.create({
         data: {
-          barcode,
-          firstName,
-          lastName,
-          isStudent,
+          ...memberData,
           hasActiveMembership: true,
           membershipValidTill: getDateYearFromNow(),
           subscriptions: canCreateSubscription
             ? {
                 create: {
-                  type,
-                  entries,
-                  period,
+                  ...subscriptionData,
                   validTill: period && getDateFromSubscriptionPeriod(period),
                 },
               }
             : {},
           personalData: {
             create: {
-              address,
-              country,
-              telNumber,
-              email,
-              gender,
+              ...personalData,
             },
           },
         },
@@ -92,41 +70,19 @@ const Member: QueryResolvers = {
     },
     updateMember: (
       _parent: unknown,
-      args: { data: UpdateMemberInput; memberId: number },
+      args: { input: UpdateMemberInput; memberId: number },
       context: IPrismaContext
     ) => {
-      const {
-        barcode,
-        firstName,
-        lastName,
-        gender,
-        address,
-        email,
-        telNumber,
-        isStudent,
-        country,
-        hasActiveMembership,
-        membershipValidTill,
-      } = args.data
+      const { memberData, personalData } = args.input
       return context.prisma.members.update({
         where: {
           id: args.memberId,
         },
         data: {
-          barcode,
-          firstName,
-          lastName,
-          isStudent,
-          // Add dynamic DATE calculation
-          hasActiveMembership,
-          membershipValidTill,
+          ...memberData,
           personalData: {
             update: {
-              address,
-              country,
-              telNumber,
-              email,
-              gender,
+              ...personalData,
             },
           },
         },
