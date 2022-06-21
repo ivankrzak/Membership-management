@@ -4,10 +4,6 @@ This project is built with `yarn`.
 
 _If you don't have `yarn` installed, [go here](https://yarnpkg.com/getting-started/install)._
 
-Project parts (= workspaces) are located inside `workspaces/` directory, which can be used as each other's dependencies.
-
-Run `yarn workspaces list` to see all project workspaces.
-
 ### Tech Stack
 
 `Prisma`
