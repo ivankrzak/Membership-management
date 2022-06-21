@@ -123,6 +123,7 @@ export type PersonalData = {
 export type Query = {
   __typename?: 'Query';
   checkActiveSubscriptions?: Maybe<Array<Maybe<Subscription>>>;
+  getActiveSubscriptions?: Maybe<Array<Maybe<Subscription>>>;
   member: Member;
   members: Array<Maybe<Member>>;
   subscriptions: Array<Maybe<Subscription>>;
@@ -132,6 +133,11 @@ export type Query = {
 
 export type QueryCheckActiveSubscriptionsArgs = {
   memberId: Scalars['Int'];
+};
+
+
+export type QueryGetActiveSubscriptionsArgs = {
+  barcode: Scalars['Int'];
 };
 
 
@@ -330,6 +336,7 @@ export type PersonalDataResolvers<ContextType = IPrismaContext, ParentType exten
 
 export type QueryResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   checkActiveSubscriptions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Subscription']>>>, ParentType, ContextType, RequireFields<QueryCheckActiveSubscriptionsArgs, 'memberId'>>;
+  getActiveSubscriptions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Subscription']>>>, ParentType, ContextType, RequireFields<QueryGetActiveSubscriptionsArgs, 'barcode'>>;
   member?: Resolver<ResolversTypes['Member'], ParentType, ContextType, RequireFields<QueryMemberArgs, 'barcode'>>;
   members?: Resolver<Array<Maybe<ResolversTypes['Member']>>, ParentType, ContextType>;
   subscriptions?: Resolver<Array<Maybe<ResolversTypes['Subscription']>>, ParentType, ContextType>;

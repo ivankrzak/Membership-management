@@ -37,6 +37,22 @@ const Member: QueryResolvers = {
           personalData: true,
         },
       }),
+    getActiveSubscriptions: async (
+      _parent: unknown,
+      args: { barcode: number },
+      context: IPrismaContext
+    ) => {
+      const result = await context.prisma.members.findFirst({
+        where: {
+          barcode: args.barcode,
+        },
+        select: {
+          subscriptions: { where: { isActive: true } },
+        },
+      })
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return result?.subscriptions
+    },
   },
   Mutation: {
     createMember: (

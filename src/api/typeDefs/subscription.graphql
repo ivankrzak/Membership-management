@@ -31,5 +31,4 @@ input CreateSubscriptionDataInput {
 type Query {
   subscriptions: [Subscription]!
   subscriptionsByMemberId(memberId: Int!): [Subscription]
-  checkActiveSubscriptions(memberId: Int!): [Subscription]
 }

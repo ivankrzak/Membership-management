@@ -48,4 +48,5 @@ type Mutation {
 type Query {
   members: [Member]!
   member(barcode: Int!): Member!
+  getActiveSubscriptions(barcode: Int!): [Subscription]
 }
