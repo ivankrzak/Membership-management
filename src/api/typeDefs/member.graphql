@@ -40,6 +40,7 @@ input UpdateMemberInput {
 type Mutation {
   createMember(input: CreateMemberInput!): Member
   updateMember(input: UpdateMemberInput!, memberId: Int!): Member
+  prolongMembership(memberId: Int!): Boolean
   deleteMember(memberId: Int!): Boolean
   blockMember(isBlocked: Boolean!, memberId: Int!): Boolean
 }

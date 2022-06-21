@@ -9,6 +9,9 @@ const SubscriptionPeriodMapper: Record<SubscriptionPeriod, number> = {
 export const getDateYearFromNow = () =>
   new Date(new Date().setFullYear(new Date().getFullYear() + 1))
 
+export const getDateYearFromDate = (from: Date) =>
+  new Date(from.setFullYear(new Date().getFullYear() + 1))
+
 export const getDateFromSubscriptionPeriod = (period: SubscriptionPeriod) => {
   if (period === SubscriptionPeriod.Twelve) {
     return getDateYearFromNow()

@@ -76,6 +76,7 @@ export type Mutation = {
   blockMember?: Maybe<Scalars['Boolean']>;
   createMember?: Maybe<Member>;
   deleteMember?: Maybe<Scalars['Boolean']>;
+  prolongMembership?: Maybe<Scalars['Boolean']>;
   updateMember?: Maybe<Member>;
 };
 
@@ -96,8 +97,13 @@ export type MutationDeleteMemberArgs = {
 };
 
 
+export type MutationProlongMembershipArgs = {
+  memberId: Scalars['Int'];
+};
+
+
 export type MutationUpdateMemberArgs = {
-  data: UpdateMemberInput;
+  input: UpdateMemberInput;
   memberId: Scalars['Int'];
 };
 
@@ -305,7 +311,8 @@ export type MutationResolvers<ContextType = IPrismaContext, ParentType extends R
   blockMember?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationBlockMemberArgs, 'isBlocked' | 'memberId'>>;
   createMember?: Resolver<Maybe<ResolversTypes['Member']>, ParentType, ContextType, RequireFields<MutationCreateMemberArgs, 'input'>>;
   deleteMember?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteMemberArgs, 'memberId'>>;
-  updateMember?: Resolver<Maybe<ResolversTypes['Member']>, ParentType, ContextType, RequireFields<MutationUpdateMemberArgs, 'data' | 'memberId'>>;
+  prolongMembership?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationProlongMembershipArgs, 'memberId'>>;
+  updateMember?: Resolver<Maybe<ResolversTypes['Member']>, ParentType, ContextType, RequireFields<MutationUpdateMemberArgs, 'input' | 'memberId'>>;
 }>;
 
 export type PersonalDataResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['PersonalData'] = ResolversParentTypes['PersonalData']> = ResolversObject<{

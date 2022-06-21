@@ -1,5 +1,6 @@
 import {
   getDateFromSubscriptionPeriod,
+  getDateYearFromDate,
   getDateYearFromNow,
 } from 'api/utils/date'
 import {
@@ -88,7 +89,34 @@ const Member: QueryResolvers = {
         },
       })
     },
-    // TODO prolong membership mutation
+    prolongMembership: async (
+      _parent: unknown,
+      args: { memberId: number },
+      context: IPrismaContext
+    ) => {
+      const memberData = await context.prisma.members.findFirst({
+        where: {
+          id: args.memberId,
+        },
+        select: {
+          hasActiveMembership: true,
+          membershipValidTill: true,
+        },
+      })
+
+      await context.prisma.members.update({
+        where: {
+          id: args.memberId,
+        },
+        data: {
+          membershipValidTill: memberData?.hasActiveMembership
+            ? getDateYearFromDate(memberData?.membershipValidTill)
+            : getDateYearFromNow(),
+        },
+      })
+
+      return true
+    },
     deleteMember: async (
       _parent: unknown,
       args: { memberId: number },
