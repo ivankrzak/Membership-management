@@ -1,5 +1,11 @@
 # Membership Management APP
 
+### Goal
+
+Goal of this APP is to create system for membership and subscription management. Each member of club have to play early membership fee in order to allegeable to activate one of the Subscriptions. We will be keeping track of all the subscriptions member bought for statistics. Each member during registration will get `card with BARCODE` that is unique in Members db model.
+Once user is created, has active membership and owns some kind of subscription, worked at the reception will be able to scan members card and based on barcode app will check if he has need to enter gym.
+The same process will be applied if member will want to buy new subscription will be prolonging membership.
+
 This project is built with `yarn`.
 
 _If you don't have `yarn` installed, [go here](https://yarnpkg.com/getting-started/install)._
