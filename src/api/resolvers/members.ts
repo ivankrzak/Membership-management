@@ -61,9 +61,11 @@ const Member: QueryResolvers = {
       context: IPrismaContext
     ) => {
       const { memberData, personalData, subscriptionData } = args.input
-      const { type, entries, period } = subscriptionData
 
-      const canCreateSubscription = type && (entries || period)
+      const canCreateSubscription =
+        subscriptionData &&
+        subscriptionData.type &&
+        (subscriptionData.entries || subscriptionData.period)
       return context.prisma.members.create({
         data: {
           ...memberData,
@@ -73,7 +75,9 @@ const Member: QueryResolvers = {
             ? {
                 create: {
                   ...subscriptionData,
-                  validTill: period && getDateFromSubscriptionPeriod(period),
+                  validTill:
+                    subscriptionData.period &&
+                    getDateFromSubscriptionPeriod(subscriptionData.period),
                 },
               }
             : {},

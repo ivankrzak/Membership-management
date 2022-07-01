@@ -29,7 +29,7 @@ input CreateMemberDataInput {
 input CreateMemberInput {
   memberData: CreateMemberDataInput!
   personalData: CreatePersonalDataInput!
-  subscriptionData: CreateSubscriptionDataInput!
+  subscriptionData: CreateSubscriptionDataInput
 }
 
 input UpdateMemberInput {
