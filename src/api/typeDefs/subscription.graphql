@@ -22,13 +22,37 @@ type Subscription {
   owner: Member
 }
 
+type ActiveSubscriptions {
+  id: Int!
+  barcode: Int!
+  firstName: String!
+  lastName: String!
+  isStudent: Boolean!
+  hasActiveMembership: Boolean!
+  membershipValidTill: Date!
+  visits: Int
+  createdAt: Date!
+  updatedAt: Date!
+  isBlocked: Boolean
+  subscriptions: [Subscription]
+}
+
 input CreateSubscriptionDataInput {
   type: SubscriptionType!
   entries: Int
   period: SubscriptionPeriod
 }
 
+input ConfirmEntryInput {
+  subscriptionId: Int!
+  type: SubscriptionType
+}
+
 type Query {
   subscriptions: [Subscription]!
-  subscriptionsByMemberId(memberId: Int!): [Subscription]
+  activeSubscriptionsByBarcode(barcode: Int!): ActiveSubscriptions!
+}
+
+type Mutation {
+  confirmEntry(input: ConfirmEntryInput): Boolean
 }

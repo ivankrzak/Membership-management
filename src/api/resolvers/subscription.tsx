@@ -1,4 +1,5 @@
-import { QueryResolvers } from '../generated/resolvers-types'
+import { SubscriptionType } from '@prisma/client'
+import { ConfirmEntryInput, QueryResolvers } from '../generated/resolvers-types'
 import { IPrismaContext } from '../prisma/IPrismaContext'
 
 const Subscription: QueryResolvers = {
@@ -13,19 +14,44 @@ const Subscription: QueryResolvers = {
           owner: true,
         },
       }),
-    subscriptionsByMemberId: async (
+    activeSubscriptionsByBarcode: async (
       _parent: unknown,
-      args: { memberId: number },
+      args: { barcode: number },
       context: IPrismaContext
-    ) =>
-      context.prisma.subscriptions.findMany({
+    ) => {
+      const data = await context.prisma.members.findFirst({
         where: {
-          ownerId: args.memberId,
+          barcode: args.barcode,
         },
         include: {
-          owner: true,
+          subscriptions: { where: { isActive: true } },
         },
-      }),
+      })
+      return data
+    },
+  },
+  Mutation: {
+    confirmEntry: async (
+      _parent: unknown,
+      args: { input: ConfirmEntryInput },
+      context: IPrismaContext
+    ) => {
+      const { subscriptionId, type } = args.input
+
+      await context.prisma.subscriptions.update({
+        where: {
+          id: subscriptionId,
+        },
+        data: {
+          owner: { update: { visits: { increment: 1 } } },
+          ...(type === SubscriptionType.ENTRY
+            ? { entries: { decrement: 1 } }
+            : {}),
+        },
+      })
+
+      return true
+    },
   },
 }
 

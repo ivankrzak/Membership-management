@@ -12,11 +12,6 @@ type Member {
   isBlocked: Boolean
   subscriptions: [Subscription]
   personalData: PersonalData
-  address: String
-  country: String
-  email: String
-  telNumber: String
-  gender: GenderType
 }
 
 input CreateMemberDataInput {
