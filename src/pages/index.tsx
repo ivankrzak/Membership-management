@@ -1,13 +1,40 @@
-import { useMembersQuery } from 'generated/generated-graphql'
+import { Button } from '@chakra-ui/react'
+import {
+  GenderType,
+  useCreateMemberMutation,
+  useMembersQuery,
+} from 'generated/generated-graphql'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
-  const { data } = useMembersQuery()
+  const [createMember] = useCreateMemberMutation()
+  const { data: listOfMembers, refetch } = useMembersQuery()
 
-  console.log(data)
+  const handleMemberCreation = async () => {
+    await createMember({
+      variables: {
+        input: {
+          memberData: {
+            barcode: 32223,
+            firstName: 'Ivan',
+            isStudent: true,
+            lastName: 'test',
+          },
+          personalData: {
+            address: 'Dadsdsadasd',
+            country: 'dsdsadsad',
+            gender: GenderType.Man,
+          },
+        },
+      },
+    })
+    await refetch()
+  }
+
+  console.log(listOfMembers)
 
   return (
     <div className={styles.container}>
@@ -21,6 +48,7 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
+        <Button onClick={() => handleMemberCreation()}>Create Member</Button>
 
         <p className={styles.description}>
           Get started by editing{' '}

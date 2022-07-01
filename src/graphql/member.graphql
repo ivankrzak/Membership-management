@@ -13,34 +13,58 @@ query Members {
   }
 }
 
-input CreateMemberInput {
+mutation CreateMember($input: CreateMemberInput!) {
+  createMember(input: $input) {
+    id
+    barcode
+    firstName
+    lastName
+    isStudent
+    hasActiveMembership
+    membershipValidTill
+  }
+}
+input CreatePersonalDataInput {
+  address: String!
+  telNumber: String
+  email: String
+  country: String!
+  gender: GenderType!
+}
+input CreateMemberDataInput {
   barcode: Int!
   firstName: String!
   lastName: String!
-  isStudent: Boolean
-  gender: GenderType
+  isStudent: Boolean!
+}
+input CreatePersonalDataInput {
   address: String!
-  country: String!
-  email: String
   telNumber: String
-  type: SubscriptionType
-  period: SubscriptionPeriod
+  email: String
+  country: String!
+  gender: GenderType!
+}
+
+input CreateSubscriptionDataInput {
+  type: SubscriptionType!
   entries: Int
+  period: SubscriptionPeriod
+}
+
+enum GenderType {
+  MAN
+  WOMAN
+}
+input CreateMemberInput {
+  memberData: CreateMemberDataInput!
+  personalData: CreatePersonalDataInput!
+  subscriptionData: CreateSubscriptionDataInput
 }
 
 fragment CreateMemberReturnValue on Member {
+  id
+  barcode
   firstName
   lastName
-  address
-  telNumber
-  email
   isStudent
-  country
-  gender
-}
-
-mutation createMember($input: CreateMemberInput!) {
-  createMember(input: $input) {
-    ...CreateMemberReturnValue
-  }
 }

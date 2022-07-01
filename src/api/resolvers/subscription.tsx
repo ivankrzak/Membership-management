@@ -1,5 +1,8 @@
-import { SubscriptionType } from '@prisma/client'
-import { ConfirmEntryInput, QueryResolvers } from '../generated/resolvers-types'
+import {
+  ConfirmEntryInput,
+  QueryResolvers,
+  SubscriptionType,
+} from '../generated/resolvers-types'
 import { IPrismaContext } from '../prisma/IPrismaContext'
 
 const Subscription: QueryResolvers = {
@@ -44,7 +47,7 @@ const Subscription: QueryResolvers = {
         },
         data: {
           owner: { update: { visits: { increment: 1 } } },
-          ...(type === SubscriptionType.ENTRY
+          ...(type === SubscriptionType.Entry
             ? { entries: { decrement: 1 } }
             : {}),
         },

@@ -16,19 +16,52 @@ export type Scalars = {
   Date: string;
 };
 
-export type CreateMemberInput = {
-  address: Scalars['String'];
+export type ActiveSubscriptions = {
+  __typename?: 'ActiveSubscriptions';
   barcode: Scalars['Int'];
+  createdAt: Scalars['Date'];
+  firstName: Scalars['String'];
+  hasActiveMembership: Scalars['Boolean'];
+  id: Scalars['Int'];
+  isBlocked?: Maybe<Scalars['Boolean']>;
+  isStudent: Scalars['Boolean'];
+  lastName: Scalars['String'];
+  membershipValidTill: Scalars['Date'];
+  subscriptions?: Maybe<Array<Maybe<Subscription>>>;
+  updatedAt: Scalars['Date'];
+  visits?: Maybe<Scalars['Int']>;
+};
+
+export type ConfirmEntryInput = {
+  subscriptionId: Scalars['Int'];
+  type?: InputMaybe<SubscriptionType>;
+};
+
+export type CreateMemberDataInput = {
+  barcode: Scalars['Int'];
+  firstName: Scalars['String'];
+  isStudent: Scalars['Boolean'];
+  lastName: Scalars['String'];
+};
+
+export type CreateMemberInput = {
+  memberData: CreateMemberDataInput;
+  personalData: CreatePersonalDataInput;
+  subscriptionData?: InputMaybe<CreateSubscriptionDataInput>;
+};
+
+export type CreatePersonalDataInput = {
+  address: Scalars['String'];
   country: Scalars['String'];
   email?: InputMaybe<Scalars['String']>;
-  entries?: InputMaybe<Scalars['Int']>;
-  firstName: Scalars['String'];
   gender: GenderType;
-  isStudent?: InputMaybe<Scalars['Boolean']>;
-  lastName: Scalars['String'];
-  period?: InputMaybe<SubscriptionPeriod>;
   telNumber?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<SubscriptionType>;
+};
+
+export type CreateSubscriptionDataInput = {
+  entries?: InputMaybe<Scalars['Int']>;
+  period?: InputMaybe<SubscriptionPeriod>;
+  type: SubscriptionType;
 };
 
 export enum GenderType {
@@ -38,13 +71,9 @@ export enum GenderType {
 
 export type Member = {
   __typename?: 'Member';
-  address?: Maybe<Scalars['String']>;
   barcode?: Maybe<Scalars['Int']>;
-  country?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['Date']>;
-  email?: Maybe<Scalars['String']>;
   firstName?: Maybe<Scalars['String']>;
-  gender?: Maybe<GenderType>;
   hasActiveMembership?: Maybe<Scalars['Boolean']>;
   id?: Maybe<Scalars['Int']>;
   isBlocked?: Maybe<Scalars['Boolean']>;
@@ -53,19 +82,50 @@ export type Member = {
   membershipValidTill?: Maybe<Scalars['Date']>;
   personalData?: Maybe<PersonalData>;
   subscriptions?: Maybe<Array<Maybe<Subscription>>>;
-  telNumber?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['Date']>;
   visits?: Maybe<Scalars['Int']>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
+  blockMember?: Maybe<Scalars['Boolean']>;
+  confirmEntry?: Maybe<Scalars['Boolean']>;
   createMember?: Maybe<Member>;
+  deleteMember?: Maybe<Scalars['Boolean']>;
+  prolongMembership?: Maybe<Scalars['Boolean']>;
+  updateMember?: Maybe<Member>;
+};
+
+
+export type MutationBlockMemberArgs = {
+  isBlocked: Scalars['Boolean'];
+  memberId: Scalars['Int'];
+};
+
+
+export type MutationConfirmEntryArgs = {
+  input?: InputMaybe<ConfirmEntryInput>;
 };
 
 
 export type MutationCreateMemberArgs = {
   input: CreateMemberInput;
+};
+
+
+export type MutationDeleteMemberArgs = {
+  memberId: Scalars['Int'];
+};
+
+
+export type MutationProlongMembershipArgs = {
+  memberId: Scalars['Int'];
+};
+
+
+export type MutationUpdateMemberArgs = {
+  input: UpdateMemberInput;
+  memberId: Scalars['Int'];
 };
 
 export type PersonalData = {
@@ -83,7 +143,26 @@ export type PersonalData = {
 
 export type Query = {
   __typename?: 'Query';
+  activeSubscriptionsByBarcode: ActiveSubscriptions;
+  getActiveSubscriptions?: Maybe<Array<Maybe<Subscription>>>;
+  member: Member;
   members: Array<Maybe<Member>>;
+  subscriptions: Array<Maybe<Subscription>>;
+};
+
+
+export type QueryActiveSubscriptionsByBarcodeArgs = {
+  barcode: Scalars['Int'];
+};
+
+
+export type QueryGetActiveSubscriptionsArgs = {
+  barcode: Scalars['Int'];
+};
+
+
+export type QueryMemberArgs = {
+  barcode: Scalars['Int'];
 };
 
 export type Subscription = {
@@ -91,7 +170,7 @@ export type Subscription = {
   createdAt: Scalars['Date'];
   entries?: Maybe<Scalars['Int']>;
   id: Scalars['Int'];
-  isBlocked?: Maybe<Scalars['Boolean']>;
+  isActive: Scalars['Boolean'];
   owner?: Maybe<Member>;
   ownerId?: Maybe<Scalars['Int']>;
   period?: Maybe<SubscriptionPeriod>;
@@ -111,30 +190,32 @@ export enum SubscriptionType {
   Time = 'TIME'
 }
 
+export type UpdateMemberInput = {
+  memberData: CreateMemberDataInput;
+  personalData: CreatePersonalDataInput;
+};
+
 export type MembersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MembersQuery = { __typename?: 'Query', members: Array<{ __typename?: 'Member', id?: number | null, barcode?: number | null, firstName?: string | null, lastName?: string | null, isStudent?: boolean | null, visits?: number | null, hasActiveMembership?: boolean | null, membershipValidTill?: string | null, createdAt?: string | null, updatedAt?: string | null } | null> };
-
-export type CreateMemberReturnValueFragment = { __typename?: 'Member', firstName?: string | null, lastName?: string | null, address?: string | null, telNumber?: string | null, email?: string | null, isStudent?: boolean | null, country?: string | null, gender?: GenderType | null };
 
 export type CreateMemberMutationVariables = Exact<{
   input: CreateMemberInput;
 }>;
 
 
-export type CreateMemberMutation = { __typename?: 'Mutation', createMember?: { __typename?: 'Member', firstName?: string | null, lastName?: string | null, address?: string | null, telNumber?: string | null, email?: string | null, isStudent?: boolean | null, country?: string | null, gender?: GenderType | null } | null };
+export type CreateMemberMutation = { __typename?: 'Mutation', createMember?: { __typename?: 'Member', id?: number | null, barcode?: number | null, firstName?: string | null, lastName?: string | null, isStudent?: boolean | null, hasActiveMembership?: boolean | null, membershipValidTill?: string | null } | null };
+
+export type CreateMemberReturnValueFragment = { __typename?: 'Member', id?: number | null, barcode?: number | null, firstName?: string | null, lastName?: string | null, isStudent?: boolean | null };
 
 export const CreateMemberReturnValueFragmentDoc = gql`
     fragment CreateMemberReturnValue on Member {
+  id
+  barcode
   firstName
   lastName
-  address
-  telNumber
-  email
   isStudent
-  country
-  gender
 }
     `;
 export const MembersDocument = gql`
@@ -181,12 +262,18 @@ export type MembersQueryHookResult = ReturnType<typeof useMembersQuery>;
 export type MembersLazyQueryHookResult = ReturnType<typeof useMembersLazyQuery>;
 export type MembersQueryResult = Apollo.QueryResult<MembersQuery, MembersQueryVariables>;
 export const CreateMemberDocument = gql`
-    mutation createMember($input: CreateMemberInput!) {
+    mutation CreateMember($input: CreateMemberInput!) {
   createMember(input: $input) {
-    ...CreateMemberReturnValue
+    id
+    barcode
+    firstName
+    lastName
+    isStudent
+    hasActiveMembership
+    membershipValidTill
   }
 }
-    ${CreateMemberReturnValueFragmentDoc}`;
+    `;
 export type CreateMemberMutationFn = Apollo.MutationFunction<CreateMemberMutation, CreateMemberMutationVariables>;
 
 /**
