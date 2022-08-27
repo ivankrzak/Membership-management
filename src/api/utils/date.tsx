@@ -26,3 +26,19 @@ export const getDateFromSubscriptionPeriod = (period: SubscriptionPeriod) => {
     )
   )
 }
+
+export const getValidTillDateForProlongedTimeSubscription = ({
+  startDate,
+  period,
+}: {
+  startDate: Date
+  period: SubscriptionPeriod
+}) => {
+  if (period === SubscriptionPeriod.Twelve) {
+    return new Date(new Date().setFullYear(startDate.getFullYear() + 1))
+  }
+
+  return new Date(
+    startDate.setMonth(new Date().getMonth() + SubscriptionPeriodMapper[period])
+  )
+}

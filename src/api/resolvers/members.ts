@@ -91,13 +91,13 @@ const Member: QueryResolvers = {
     },
     updateMember: (
       _parent: unknown,
-      args: { input: UpdateMemberInput; memberId: number },
+      args: { input: UpdateMemberInput; cardNumber: number },
       context: IPrismaContext
     ) => {
       const { memberData, personalData } = args.input
       return context.prisma.members.update({
         where: {
-          id: args.memberId,
+          cardNumber: args.cardNumber,
         },
         data: {
           ...memberData,
@@ -111,12 +111,12 @@ const Member: QueryResolvers = {
     },
     prolongMembership: async (
       _parent: unknown,
-      args: { memberId: number },
+      args: { cardNumber: number },
       context: IPrismaContext
     ) => {
       const memberData = await context.prisma.members.findFirst({
         where: {
-          id: args.memberId,
+          cardNumber: args.cardNumber,
         },
         select: {
           hasActiveMembership: true,
@@ -126,7 +126,7 @@ const Member: QueryResolvers = {
 
       await context.prisma.members.update({
         where: {
-          id: args.memberId,
+          cardNumber: args.cardNumber,
         },
         data: {
           membershipValidTill: memberData?.hasActiveMembership
@@ -169,12 +169,12 @@ const Member: QueryResolvers = {
     },
     blockMember: async (
       _parent: unknown,
-      args: { isBlocked: boolean; memberId: number },
+      args: { isBlocked: boolean; cardNumber: number },
       context: IPrismaContext
     ) => {
       await context.prisma.members.update({
         where: {
-          id: args.memberId,
+          cardNumber: args.cardNumber,
         },
         data: {
           isBlocked: args.isBlocked,

@@ -95,14 +95,15 @@ export type Mutation = {
   confirmEntry?: Maybe<Scalars['Boolean']>;
   createMember?: Maybe<Member>;
   deleteMember?: Maybe<Scalars['Boolean']>;
+  newSubscription?: Maybe<Scalars['Boolean']>;
   prolongMembership?: Maybe<Scalars['Boolean']>;
   updateMember?: Maybe<Member>;
 };
 
 
 export type MutationBlockMemberArgs = {
+  cardNumber: Scalars['Int'];
   isBlocked: Scalars['Boolean'];
-  memberId: Scalars['Int'];
 };
 
 
@@ -121,14 +122,26 @@ export type MutationDeleteMemberArgs = {
 };
 
 
+export type MutationNewSubscriptionArgs = {
+  input?: InputMaybe<NewSubscriptionInput>;
+};
+
+
 export type MutationProlongMembershipArgs = {
-  memberId: Scalars['Int'];
+  cardNumber: Scalars['Int'];
 };
 
 
 export type MutationUpdateMemberArgs = {
+  cardNumber: Scalars['Int'];
   input: UpdateMemberInput;
-  memberId: Scalars['Int'];
+};
+
+export type NewSubscriptionInput = {
+  cardNumber: Scalars['Int'];
+  entries?: InputMaybe<Scalars['Int']>;
+  period?: InputMaybe<SubscriptionPeriod>;
+  type: SubscriptionType;
 };
 
 export type PersonalData = {
@@ -281,6 +294,7 @@ export type ResolversTypes = ResolversObject<{
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Member: ResolverTypeWrapper<MembersModel>;
   Mutation: ResolverTypeWrapper<{}>;
+  NewSubscriptionInput: NewSubscriptionInput;
   PersonalData: ResolverTypeWrapper<PersonalData>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
@@ -303,6 +317,7 @@ export type ResolversParentTypes = ResolversObject<{
   Int: Scalars['Int'];
   Member: MembersModel;
   Mutation: {};
+  NewSubscriptionInput: NewSubscriptionInput;
   PersonalData: PersonalData;
   Query: {};
   String: Scalars['String'];
@@ -348,12 +363,13 @@ export type MemberResolvers<ContextType = IPrismaContext, ParentType extends Res
 }>;
 
 export type MutationResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  blockMember?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationBlockMemberArgs, 'isBlocked' | 'memberId'>>;
+  blockMember?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationBlockMemberArgs, 'cardNumber' | 'isBlocked'>>;
   confirmEntry?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, Partial<MutationConfirmEntryArgs>>;
   createMember?: Resolver<Maybe<ResolversTypes['Member']>, ParentType, ContextType, RequireFields<MutationCreateMemberArgs, 'input'>>;
   deleteMember?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteMemberArgs, 'memberId'>>;
-  prolongMembership?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationProlongMembershipArgs, 'memberId'>>;
-  updateMember?: Resolver<Maybe<ResolversTypes['Member']>, ParentType, ContextType, RequireFields<MutationUpdateMemberArgs, 'input' | 'memberId'>>;
+  newSubscription?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, Partial<MutationNewSubscriptionArgs>>;
+  prolongMembership?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationProlongMembershipArgs, 'cardNumber'>>;
+  updateMember?: Resolver<Maybe<ResolversTypes['Member']>, ParentType, ContextType, RequireFields<MutationUpdateMemberArgs, 'cardNumber' | 'input'>>;
 }>;
 
 export type PersonalDataResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['PersonalData'] = ResolversParentTypes['PersonalData']> = ResolversObject<{

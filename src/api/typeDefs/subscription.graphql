@@ -48,6 +48,13 @@ input ConfirmEntryInput {
   type: SubscriptionType
 }
 
+input NewSubscriptionInput {
+  cardNumber: Int!
+  type: SubscriptionType!
+  entries: Int
+  period: SubscriptionPeriod
+}
+
 type Query {
   subscriptions: [Subscription]!
   activeSubscriptionsByCardNumber(cardNumber: Int!): ActiveSubscriptions!
@@ -55,4 +62,5 @@ type Query {
 
 type Mutation {
   confirmEntry(input: ConfirmEntryInput): Boolean
+  newSubscription(input: NewSubscriptionInput): Boolean
 }
