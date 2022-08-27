@@ -6,6 +6,7 @@ enum GenderType {
 type PersonalData {
   id: Int
   address: String
+  city: String
   country: String
   email: String
   telNumber: String
@@ -17,8 +18,9 @@ type PersonalData {
 
 input CreatePersonalDataInput {
   address: String!
+  city: String!
+  country: String!
   telNumber: String
   email: String
-  country: String!
   gender: GenderType!
 }

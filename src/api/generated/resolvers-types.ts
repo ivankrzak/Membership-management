@@ -20,7 +20,7 @@ export type Scalars = {
 
 export type ActiveSubscriptions = {
   __typename?: 'ActiveSubscriptions';
-  barcode: Scalars['Int'];
+  cardNumber: Scalars['Int'];
   createdAt: Scalars['Date'];
   firstName: Scalars['String'];
   hasActiveMembership: Scalars['Boolean'];
@@ -40,7 +40,7 @@ export type ConfirmEntryInput = {
 };
 
 export type CreateMemberDataInput = {
-  barcode: Scalars['Int'];
+  cardNumber: Scalars['Int'];
   firstName: Scalars['String'];
   isStudent: Scalars['Boolean'];
   lastName: Scalars['String'];
@@ -54,6 +54,7 @@ export type CreateMemberInput = {
 
 export type CreatePersonalDataInput = {
   address: Scalars['String'];
+  city: Scalars['String'];
   country: Scalars['String'];
   email?: InputMaybe<Scalars['String']>;
   gender: GenderType;
@@ -73,7 +74,7 @@ export enum GenderType {
 
 export type Member = {
   __typename?: 'Member';
-  barcode?: Maybe<Scalars['Int']>;
+  cardNumber?: Maybe<Scalars['Int']>;
   createdAt?: Maybe<Scalars['Date']>;
   firstName?: Maybe<Scalars['String']>;
   hasActiveMembership?: Maybe<Scalars['Boolean']>;
@@ -133,6 +134,7 @@ export type MutationUpdateMemberArgs = {
 export type PersonalData = {
   __typename?: 'PersonalData';
   address?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
   country?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['Date']>;
   email?: Maybe<Scalars['String']>;
@@ -145,7 +147,7 @@ export type PersonalData = {
 
 export type Query = {
   __typename?: 'Query';
-  activeSubscriptionsByBarcode: ActiveSubscriptions;
+  activeSubscriptionsByCardNumber: ActiveSubscriptions;
   getActiveSubscriptions?: Maybe<Array<Maybe<Subscription>>>;
   member: Member;
   members: Array<Maybe<Member>>;
@@ -153,18 +155,18 @@ export type Query = {
 };
 
 
-export type QueryActiveSubscriptionsByBarcodeArgs = {
-  barcode: Scalars['Int'];
+export type QueryActiveSubscriptionsByCardNumberArgs = {
+  cardNumber: Scalars['Int'];
 };
 
 
 export type QueryGetActiveSubscriptionsArgs = {
-  barcode: Scalars['Int'];
+  cardNumber: Scalars['Int'];
 };
 
 
 export type QueryMemberArgs = {
-  barcode: Scalars['Int'];
+  cardNumber: Scalars['Int'];
 };
 
 export type Subscription = {
@@ -309,7 +311,7 @@ export type ResolversParentTypes = ResolversObject<{
 }>;
 
 export type ActiveSubscriptionsResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['ActiveSubscriptions'] = ResolversParentTypes['ActiveSubscriptions']> = ResolversObject<{
-  barcode?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  cardNumber?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   hasActiveMembership?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -329,7 +331,7 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 }
 
 export type MemberResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Member'] = ResolversParentTypes['Member']> = ResolversObject<{
-  barcode?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  cardNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   hasActiveMembership?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
@@ -356,6 +358,7 @@ export type MutationResolvers<ContextType = IPrismaContext, ParentType extends R
 
 export type PersonalDataResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['PersonalData'] = ResolversParentTypes['PersonalData']> = ResolversObject<{
   address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -368,9 +371,9 @@ export type PersonalDataResolvers<ContextType = IPrismaContext, ParentType exten
 }>;
 
 export type QueryResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  activeSubscriptionsByBarcode?: Resolver<ResolversTypes['ActiveSubscriptions'], ParentType, ContextType, RequireFields<QueryActiveSubscriptionsByBarcodeArgs, 'barcode'>>;
-  getActiveSubscriptions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Subscription']>>>, ParentType, ContextType, RequireFields<QueryGetActiveSubscriptionsArgs, 'barcode'>>;
-  member?: Resolver<ResolversTypes['Member'], ParentType, ContextType, RequireFields<QueryMemberArgs, 'barcode'>>;
+  activeSubscriptionsByCardNumber?: Resolver<ResolversTypes['ActiveSubscriptions'], ParentType, ContextType, RequireFields<QueryActiveSubscriptionsByCardNumberArgs, 'cardNumber'>>;
+  getActiveSubscriptions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Subscription']>>>, ParentType, ContextType, RequireFields<QueryGetActiveSubscriptionsArgs, 'cardNumber'>>;
+  member?: Resolver<ResolversTypes['Member'], ParentType, ContextType, RequireFields<QueryMemberArgs, 'cardNumber'>>;
   members?: Resolver<Array<Maybe<ResolversTypes['Member']>>, ParentType, ContextType>;
   subscriptions?: Resolver<Array<Maybe<ResolversTypes['Subscription']>>, ParentType, ContextType>;
 }>;

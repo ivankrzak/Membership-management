@@ -14,7 +14,7 @@ datasource db {
 
 model Members {
   id                  Int             @id @default(autoincrement())
-  barcode             Int             @unique
+  cardNumber          Int             @unique
   firstName           String
   lastName            String
   isStudent           Boolean         @default(false)
@@ -31,6 +31,7 @@ model Members {
 model PersonalData {
   id        Int        @id @default(autoincrement())
   address   String
+  city      String
   country   String
   email     String?
   telNumber String?
@@ -52,7 +53,6 @@ model Subscriptions {
   updatedAt DateTime            @updatedAt
   owner     Members?            @relation(fields: [ownerId], references: [id])
   ownerId   Int?
-
 }
 
 enum SubscriptionType {

@@ -25,12 +25,12 @@ const Member: QueryResolvers = {
       }),
     member: async (
       _parent: unknown,
-      args: { barcode: number },
+      args: { cardNumber: number },
       context: IPrismaContext
     ) =>
       context.prisma.members.findFirst({
         where: {
-          barcode: args.barcode,
+          cardNumber: args.cardNumber,
         },
         include: {
           subscriptions: true,
@@ -39,12 +39,12 @@ const Member: QueryResolvers = {
       }),
     getActiveSubscriptions: async (
       _parent: unknown,
-      args: { barcode: number },
+      args: { cardNumber: number },
       context: IPrismaContext
     ) => {
       const result = await context.prisma.members.findFirst({
         where: {
-          barcode: args.barcode,
+          cardNumber: args.cardNumber,
         },
         select: {
           subscriptions: { where: { isActive: true } },

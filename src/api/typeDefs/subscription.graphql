@@ -24,7 +24,7 @@ type Subscription {
 
 type ActiveSubscriptions {
   id: Int!
-  barcode: Int!
+  cardNumber: Int!
   firstName: String!
   lastName: String!
   isStudent: Boolean!
@@ -50,7 +50,7 @@ input ConfirmEntryInput {
 
 type Query {
   subscriptions: [Subscription]!
-  activeSubscriptionsByBarcode(barcode: Int!): ActiveSubscriptions!
+  activeSubscriptionsByCardNumber(cardNumber: Int!): ActiveSubscriptions!
 }
 
 type Mutation {

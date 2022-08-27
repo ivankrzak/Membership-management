@@ -1,7 +1,7 @@
 query Members {
   members {
     id
-    barcode
+    cardNumber
     firstName
     lastName
     isStudent
@@ -16,7 +16,7 @@ query Members {
 mutation CreateMember($input: CreateMemberInput!) {
   createMember(input: $input) {
     id
-    barcode
+    cardNumber
     firstName
     lastName
     isStudent
@@ -26,22 +26,24 @@ mutation CreateMember($input: CreateMemberInput!) {
 }
 input CreatePersonalDataInput {
   address: String!
+  city: String!
+  country: String!
   telNumber: String
   email: String
-  country: String!
   gender: GenderType!
 }
 input CreateMemberDataInput {
-  barcode: Int!
+  cardNumber: Int!
   firstName: String!
   lastName: String!
   isStudent: Boolean!
 }
 input CreatePersonalDataInput {
   address: String!
+  city: String!
+  country: String!
   telNumber: String
   email: String
-  country: String!
   gender: GenderType!
 }
 
@@ -63,7 +65,7 @@ input CreateMemberInput {
 
 fragment CreateMemberReturnValue on Member {
   id
-  barcode
+  cardNumber
   firstName
   lastName
   isStudent

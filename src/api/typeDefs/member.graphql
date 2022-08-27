@@ -1,6 +1,6 @@
 type Member {
   id: Int
-  barcode: Int
+  cardNumber: Int
   firstName: String
   lastName: String
   isStudent: Boolean
@@ -15,7 +15,7 @@ type Member {
 }
 
 input CreateMemberDataInput {
-  barcode: Int!
+  cardNumber: Int!
   firstName: String!
   lastName: String!
   isStudent: Boolean!
@@ -42,6 +42,6 @@ type Mutation {
 
 type Query {
   members: [Member]!
-  member(barcode: Int!): Member!
-  getActiveSubscriptions(barcode: Int!): [Subscription]
+  member(cardNumber: Int!): Member!
+  getActiveSubscriptions(cardNumber: Int!): [Subscription]
 }

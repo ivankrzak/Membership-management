@@ -18,13 +18,14 @@ const Home: NextPage = () => {
       variables: {
         input: {
           memberData: {
-            barcode: 32223,
+            cardNumber: 32223,
             firstName: 'Ivan',
             isStudent: true,
             lastName: 'test',
           },
           personalData: {
             address: 'Dadsdsadasd',
+            city: 'dsdsadsad',
             country: 'dsdsadsad',
             gender: GenderType.Man,
           },

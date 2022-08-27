@@ -17,14 +17,14 @@ const Subscription: QueryResolvers = {
           owner: true,
         },
       }),
-    activeSubscriptionsByBarcode: async (
+    activeSubscriptionsByCardNumber: async (
       _parent: unknown,
-      args: { barcode: number },
+      args: { cardNumber: number },
       context: IPrismaContext
     ) => {
       const data = await context.prisma.members.findFirst({
         where: {
-          barcode: args.barcode,
+          cardNumber: args.cardNumber,
         },
         include: {
           subscriptions: { where: { isActive: true } },

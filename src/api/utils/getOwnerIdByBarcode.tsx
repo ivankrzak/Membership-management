@@ -1,13 +1,13 @@
 import Prisma from 'api/prisma/client'
 
-const getMemberIdByBarcode = ({ barcode }: { barcode: number }) =>
+const getMemberIdByCardNumber = ({ cardNumber }: { cardNumber: number }) =>
   Prisma.members.findFirst({
     where: {
-      barcode,
+      cardNumber,
     },
     select: {
       id: true,
     },
   })
 
-export default getMemberIdByBarcode
+export default getMemberIdByCardNumber

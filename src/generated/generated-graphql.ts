@@ -18,7 +18,7 @@ export type Scalars = {
 
 export type ActiveSubscriptions = {
   __typename?: 'ActiveSubscriptions';
-  barcode: Scalars['Int'];
+  cardNumber: Scalars['Int'];
   createdAt: Scalars['Date'];
   firstName: Scalars['String'];
   hasActiveMembership: Scalars['Boolean'];
@@ -38,7 +38,7 @@ export type ConfirmEntryInput = {
 };
 
 export type CreateMemberDataInput = {
-  barcode: Scalars['Int'];
+  cardNumber: Scalars['Int'];
   firstName: Scalars['String'];
   isStudent: Scalars['Boolean'];
   lastName: Scalars['String'];
@@ -52,6 +52,7 @@ export type CreateMemberInput = {
 
 export type CreatePersonalDataInput = {
   address: Scalars['String'];
+  city: Scalars['String'];
   country: Scalars['String'];
   email?: InputMaybe<Scalars['String']>;
   gender: GenderType;
@@ -71,7 +72,7 @@ export enum GenderType {
 
 export type Member = {
   __typename?: 'Member';
-  barcode?: Maybe<Scalars['Int']>;
+  cardNumber?: Maybe<Scalars['Int']>;
   createdAt?: Maybe<Scalars['Date']>;
   firstName?: Maybe<Scalars['String']>;
   hasActiveMembership?: Maybe<Scalars['Boolean']>;
@@ -131,6 +132,7 @@ export type MutationUpdateMemberArgs = {
 export type PersonalData = {
   __typename?: 'PersonalData';
   address?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
   country?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['Date']>;
   email?: Maybe<Scalars['String']>;
@@ -143,7 +145,7 @@ export type PersonalData = {
 
 export type Query = {
   __typename?: 'Query';
-  activeSubscriptionsByBarcode: ActiveSubscriptions;
+  activeSubscriptionsByCardNumber: ActiveSubscriptions;
   getActiveSubscriptions?: Maybe<Array<Maybe<Subscription>>>;
   member: Member;
   members: Array<Maybe<Member>>;
@@ -151,18 +153,18 @@ export type Query = {
 };
 
 
-export type QueryActiveSubscriptionsByBarcodeArgs = {
-  barcode: Scalars['Int'];
+export type QueryActiveSubscriptionsByCardNumberArgs = {
+  cardNumber: Scalars['Int'];
 };
 
 
 export type QueryGetActiveSubscriptionsArgs = {
-  barcode: Scalars['Int'];
+  cardNumber: Scalars['Int'];
 };
 
 
 export type QueryMemberArgs = {
-  barcode: Scalars['Int'];
+  cardNumber: Scalars['Int'];
 };
 
 export type Subscription = {
@@ -198,21 +200,21 @@ export type UpdateMemberInput = {
 export type MembersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MembersQuery = { __typename?: 'Query', members: Array<{ __typename?: 'Member', id?: number | null, barcode?: number | null, firstName?: string | null, lastName?: string | null, isStudent?: boolean | null, visits?: number | null, hasActiveMembership?: boolean | null, membershipValidTill?: string | null, createdAt?: string | null, updatedAt?: string | null } | null> };
+export type MembersQuery = { __typename?: 'Query', members: Array<{ __typename?: 'Member', id?: number | null, cardNumber?: number | null, firstName?: string | null, lastName?: string | null, isStudent?: boolean | null, visits?: number | null, hasActiveMembership?: boolean | null, membershipValidTill?: string | null, createdAt?: string | null, updatedAt?: string | null } | null> };
 
 export type CreateMemberMutationVariables = Exact<{
   input: CreateMemberInput;
 }>;
 
 
-export type CreateMemberMutation = { __typename?: 'Mutation', createMember?: { __typename?: 'Member', id?: number | null, barcode?: number | null, firstName?: string | null, lastName?: string | null, isStudent?: boolean | null, hasActiveMembership?: boolean | null, membershipValidTill?: string | null } | null };
+export type CreateMemberMutation = { __typename?: 'Mutation', createMember?: { __typename?: 'Member', id?: number | null, cardNumber?: number | null, firstName?: string | null, lastName?: string | null, isStudent?: boolean | null, hasActiveMembership?: boolean | null, membershipValidTill?: string | null } | null };
 
-export type CreateMemberReturnValueFragment = { __typename?: 'Member', id?: number | null, barcode?: number | null, firstName?: string | null, lastName?: string | null, isStudent?: boolean | null };
+export type CreateMemberReturnValueFragment = { __typename?: 'Member', id?: number | null, cardNumber?: number | null, firstName?: string | null, lastName?: string | null, isStudent?: boolean | null };
 
 export const CreateMemberReturnValueFragmentDoc = gql`
     fragment CreateMemberReturnValue on Member {
   id
-  barcode
+  cardNumber
   firstName
   lastName
   isStudent
@@ -222,7 +224,7 @@ export const MembersDocument = gql`
     query Members {
   members {
     id
-    barcode
+    cardNumber
     firstName
     lastName
     isStudent
@@ -265,7 +267,7 @@ export const CreateMemberDocument = gql`
     mutation CreateMember($input: CreateMemberInput!) {
   createMember(input: $input) {
     id
-    barcode
+    cardNumber
     firstName
     lastName
     isStudent
